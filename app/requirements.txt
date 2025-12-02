@@ -1,0 +1,12 @@
+
+fastapi
+psycopg2-binary
+sqlalchemy
+python-dotenv
+uvicorn[standard]
+python-jose
+passlib[argon2]
+sqlmodel
+pydantic
+pyjwt
+python-multipart
