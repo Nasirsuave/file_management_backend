@@ -5,6 +5,8 @@ version: "3.9"
 services:
   api:
     build: .
+    env_file:
+      - .env
     container_name: fastapi_container
     ports:
       - "8000:8000"

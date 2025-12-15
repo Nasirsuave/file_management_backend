@@ -10,3 +10,7 @@ sqlmodel
 pydantic
 pyjwt
 python-multipart
+sendgrid
+itsdangerous
+pydantic-settings
+

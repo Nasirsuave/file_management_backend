@@ -5,7 +5,9 @@ FROM python:3.12
 # Set working directory
 WORKDIR /app
 
-# Copy requirements
+ENV PYTHONPATH=/app
+
+# Copy requirements and put in working directory
 COPY ./app/requirements.txt .
 
 # Install Python packages

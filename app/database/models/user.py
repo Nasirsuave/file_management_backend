@@ -1,5 +1,6 @@
-from sqlmodel import SQLModel, Field
-from typing import Optional
+
+from sqlmodel import SQLModel, Field, Relationship
+from typing import Optional,List
 
 
 class User(SQLModel, table=True):
@@ -11,4 +12,5 @@ class User(SQLModel, table=True):
     disabled: bool = False
     is_verified: bool = False  # for email verification
 
+    files: List["FileStore"] = Relationship(back_populates="owner")
 

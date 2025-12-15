@@ -1,3 +1,4 @@
+
 from sqlmodel import SQLModel
 from pydantic import BaseModel
 from typing import Optional
@@ -15,20 +16,3 @@ class UserRead(SQLModel):
     email: str
     full_name: Optional[str]
     disabled: bool
-
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-
-class TokenData(BaseModel):
-    email: str | None = None
-    username:str | None = None
-
-
-class PasswordReset(BaseModel):
-    new_password: str
-
-class ResetPasswordEmail(BaseModel):
-    email: str

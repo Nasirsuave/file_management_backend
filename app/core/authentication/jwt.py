@@ -1,24 +1,24 @@
+
+
+
+from core.config import settings
+from itsdangerous import URLSafeTimedSerializer,SignatureExpired, BadSignature
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+from core.config import settings
 from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
 from jose import jwt
 
-# Secret key & algorithm for JWT
-SECRET_KEY = "supersecretkey"  # replace with a secure random key in production
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-# Password hashing using Argon2
-pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
+FROM_EMAIL = settings.FROM_EMAIL
+SENDGRID_API_KEY = settings.SENDGRID_API_KEY
+SECRET_EMAIL_KEY = settings.SECRET_EMAIL_KEY
+SECRET_KEY = settings.SECRET_KEY
+ALGORITHM = settings.ALGORITHM
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 
-# Hash a plain password
-def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
 
-# Verify a password against a stored hash
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
-
-# Create JWT access token
 def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
     to_encode = data.copy()
     if expires_delta:
@@ -49,3 +49,21 @@ def verify_reset_token(token: str) -> dict | None:
         return None
     except jwt.JWTError:
         return None
+    
+
+#for email service
+
+serializer = URLSafeTimedSerializer(SECRET_EMAIL_KEY)
+
+def generate_verification_token(email: str) -> str:
+    return serializer.dumps(email, salt="email-verification-salt")
+
+def verify_token(token: str, max_age=3600) -> str:
+    # from itsdangerous import SignatureExpired, BadSignature
+    try:
+        email = serializer.loads(token, salt="email-verification-salt", max_age=max_age)
+        return email
+    except SignatureExpired:
+        return "expired"
+    except BadSignature:
+        return "invalid"
